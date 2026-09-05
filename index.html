@@ -1,0 +1,2958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>AI Teacher</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    background:#f4f7fb;
+    color:#222;
+}
+
+header{
+    background:#4f46e5;
+    color:white;
+    padding:25px;
+    text-align:center;
+}
+
+header h1{
+    font-size:32px;
+    margin-bottom:8px;
+}
+
+.container{
+    width:92%;
+    max-width:1000px;
+    margin:30px auto;
+}
+
+.card{
+    background:white;
+    padding:25px;
+    margin-bottom:20px;
+    border-radius:15px;
+    box-shadow:0 5px 20px rgba(0,0,0,.08);
+}
+
+h2{
+    color:#4f46e5;
+    margin-bottom:15px;
+}
+
+h3{
+    margin-bottom:12px;
+}
+
+label{
+    display:block;
+    margin-top:15px;
+    margin-bottom:6px;
+    font-weight:bold;
+}
+
+input,
+select,
+textarea{
+    width:100%;
+    padding:12px;
+    border:1px solid #ccc;
+    border-radius:8px;
+    font-size:16px;
+}
+
+textarea{
+    resize:vertical;
+    min-height:90px;
+}
+
+button{
+    background:#4f46e5;
+    color:white;
+    border:none;
+    padding:12px 20px;
+    border-radius:8px;
+    cursor:pointer;
+    margin-top:15px;
+    font-size:16px;
+}
+
+button:hover{
+    background:#3730a3;
+}
+
+button:disabled{
+    opacity:.6;
+    cursor:not-allowed;
+}
+
+.option{
+    background:#f1f5f9;
+    color:#222;
+    width:100%;
+    text-align:left;
+    margin-top:10px;
+}
+
+.option:hover{
+    background:#e2e8f0;
+}
+
+.success{
+    background:#dcfce7;
+    color:#166534;
+    padding:15px;
+    border-radius:8px;
+    margin-top:15px;
+}
+
+.error{
+    background:#fee2e2;
+    color:#991b1b;
+    padding:15px;
+    border-radius:8px;
+    margin-top:15px;
+}
+
+.info{
+    background:#eef2ff;
+    padding:15px;
+    border-radius:10px;
+    margin-top:15px;
+}
+
+.warning{
+    background:#fff7ed;
+    color:#9a3412;
+    padding:15px;
+    border-radius:10px;
+    margin-top:15px;
+}
+
+.hidden{
+    display:none !important;
+}
+
+.score{
+    font-size:35px;
+    font-weight:bold;
+    text-align:center;
+    margin:20px;
+}
+
+.report-item{
+    padding:12px;
+    margin:8px 0;
+    background:#f8fafc;
+    border-radius:8px;
+}
+
+#pdfText{
+    white-space:pre-wrap;
+    max-height:300px;
+    overflow-y:auto;
+    background:#f8fafc;
+    padding:15px;
+    border-radius:10px;
+    margin-top:15px;
+}
+
+.avatar{
+    font-size:75px;
+    text-align:center;
+    margin:15px;
+    animation:moveTeacher 1.5s infinite alternate;
+}
+
+@keyframes moveTeacher{
+    from{
+        transform:translateY(0);
+    }
+    to{
+        transform:translateY(-8px);
+    }
+}
+
+.progress-box{
+    margin:20px 0;
+}
+
+.progress-bar{
+    width:100%;
+    height:18px;
+    background:#e5e7eb;
+    border-radius:20px;
+    overflow:hidden;
+}
+
+.progress-fill{
+    height:100%;
+    width:0%;
+    background:#4f46e5;
+    transition:width .5s;
+}
+
+.highlight{
+    font-size:17px;
+    line-height:1.7;
+    white-space:pre-wrap;
+}
+
+.lesson-step{
+    padding:14px;
+    margin:10px 0;
+    background:#f8fafc;
+    border-radius:10px;
+    border-left:5px solid #4f46e5;
+}
+
+.teacher-stage{
+    background:linear-gradient(135deg,#eef2ff,#f8fafc);
+    border-radius:16px;
+    padding:18px;
+    margin-top:15px;
+    text-align:center;
+    border:1px solid #e0e7ff;
+}
+
+.voice-controls{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    justify-content:center;
+    margin-top:15px;
+}
+
+.voice-controls button{
+    margin-top:0;
+}
+
+.voice-status{
+    margin-top:10px;
+    font-weight:bold;
+    color:#4f46e5;
+}
+
+.speaking{
+    animation:speakingPulse .65s infinite alternate;
+}
+
+@keyframes speakingPulse{
+    from{
+        transform:translateY(0) scale(1);
+    }
+    to{
+        transform:translateY(-8px) scale(1.06);
+    }
+}
+
+.scene-box{
+    margin-top:18px;
+    padding:18px;
+    background:white;
+    border-radius:12px;
+    text-align:left;
+    box-shadow:0 3px 12px rgba(0,0,0,.06);
+}
+
+.scene-label{
+    font-weight:bold;
+    color:#4f46e5;
+    margin-bottom:8px;
+}
+
+.ai-box{
+    margin-top:20px;
+    padding:18px;
+    background:#f8fafc;
+    border-radius:12px;
+    border:1px solid #e2e8f0;
+}
+
+.ai-answer{
+    margin-top:15px;
+    line-height:1.7;
+    white-space:pre-wrap;
+}
+
+.loading{
+    text-align:center;
+    padding:15px;
+    color:#4f46e5;
+    font-weight:bold;
+}
+
+.badge{
+    display:inline-block;
+    padding:5px 10px;
+    border-radius:20px;
+    background:#e0e7ff;
+    color:#3730a3;
+    font-size:13px;
+    margin:3px;
+}
+
+/* ===== AI TEACHER VIDEO PRESENTATION ===== */
+.ai-video-stage{
+  position:relative; overflow:hidden; border-radius:22px; min-height:390px;
+  background:linear-gradient(135deg,#111827,#1f2937 55%,#374151);
+  color:#fff; padding:24px; margin:18px 0; box-shadow:0 18px 45px rgba(0,0,0,.18);
+}
+.ai-video-top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.ai-video-badge{background:rgba(255,255,255,.12);padding:7px 12px;border-radius:999px;font-size:13px}
+.ai-video-content{display:grid;grid-template-columns:180px 1fr;gap:24px;align-items:center;margin-top:28px}
+.ai-teacher-avatar{
+  width:150px;height:150px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:76px;background:rgba(255,255,255,.12);border:3px solid rgba(255,255,255,.3);
+  margin:auto;box-shadow:0 0 0 10px rgba(255,255,255,.05);
+}
+.ai-teacher-avatar.talking{animation:teacherTalk .65s infinite alternate}
+@keyframes teacherTalk{from{transform:translateY(0) scale(1)}to{transform:translateY(-6px) scale(1.04)}}
+.ai-scene-card{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:18px;padding:22px}
+.ai-scene-title{font-size:25px;font-weight:800;margin-bottom:10px}
+.ai-scene-text{font-size:17px;line-height:1.65;color:#f3f4f6}
+.ai-visual-box{
+  margin-top:16px;padding:15px;border-radius:14px;background:rgba(0,0,0,.18);
+  font-size:15px;line-height:1.55
+}
+.ai-video-controls{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+.ai-video-controls button{border:0;border-radius:12px;padding:10px 16px;cursor:pointer;font-weight:700}
+.ai-video-progress{height:7px;background:rgba(255,255,255,.18);border-radius:99px;margin-top:18px;overflow:hidden}
+.ai-video-progress-fill{height:100%;width:0%;background:#fff;transition:width .3s}
+.ai-video-caption{margin-top:12px;text-align:center;font-size:14px;color:#d1d5db}
+@media(max-width:650px){.ai-video-content{grid-template-columns:1fr}.ai-teacher-avatar{width:120px;height:120px;font-size:60px}}
+
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>🤖 AI Teacher</h1>
+    <p>Your Personalized AI Learning Assistant</p>
+</header>
+
+<div class="container">
+
+<!-- =====================================================
+START PAGE
+===================================================== -->
+
+<section id="startPage" class="card">
+
+    <h2>📚 Start Your Learning</h2>
+
+    <label>📄 Upload Study Material</label>
+
+    <input
+        type="file"
+        id="material"
+        accept=".pdf"
+    >
+
+    <button
+        type="button"
+        onclick="uploadMaterial()">
+        📖 Read PDF
+    </button>
+
+    <div id="uploadMessage"></div>
+
+    <label>🎯 Topic</label>
+
+    <input
+        type="text"
+        id="topic"
+        placeholder="Example: Artificial Intelligence"
+    >
+
+    <label>🎓 Learning Level</label>
+
+    <select id="level">
+
+        <option value="Beginner">
+            Beginner
+        </option>
+
+        <option value="Intermediate">
+            Intermediate
+        </option>
+
+        <option value="Advanced">
+            Advanced
+        </option>
+
+    </select>
+
+    <label>🌐 Teaching Language</label>
+
+    <select id="language">
+
+        <option value="English">
+            English
+        </option>
+
+        <option value="Tamil">
+            Tamil
+        </option>
+
+        <option value="Tanglish">
+            Tanglish
+        </option>
+
+    </select>
+
+    <label>⏱️ Available Learning Time</label>
+
+    <select id="time">
+
+        <option value="10 minutes">
+            10 minutes
+        </option>
+
+        <option value="20 minutes">
+            20 minutes
+        </option>
+
+        <option value="30 minutes">
+            30 minutes
+        </option>
+
+    </select>
+
+    <label>🎯 Learning Objective</label>
+
+    <input
+        type="text"
+        id="objective"
+        placeholder="Example: Understand the basics"
+    >
+
+    <button
+        type="button"
+        onclick="startLearning()">
+        🚀 Start Learning
+    </button>
+
+</section>
+
+
+<!-- =====================================================
+PDF PAGE
+===================================================== -->
+
+<section
+    id="materialSection"
+    class="card hidden">
+
+    <h2>📄 Study Material</h2>
+
+    <div id="materialInfo"></div>
+
+    <h3 style="margin-top:20px;">
+        Extracted PDF Content
+    </h3>
+
+    <div id="pdfText"></div>
+
+    <button
+        type="button"
+        onclick="goToLesson()">
+        🧠 Generate Personalized Lesson
+    </button>
+
+</section>
+
+
+<!-- =====================================================
+LESSON PAGE
+===================================================== -->
+
+<section
+    id="lessonPage"
+    class="card hidden">
+
+    <h2>🧠 Personalized Lesson Plan</h2>
+
+    <div class="info">
+
+        <p>
+            <b>Topic:</b>
+            <span id="lessonTopic"></span>
+        </p>
+
+        <p>
+            <b>Level:</b>
+            <span id="lessonLevel"></span>
+        </p>
+
+        <p>
+            <b>Language:</b>
+            <span id="lessonLanguage"></span>
+        </p>
+
+        <p>
+            <b>Time:</b>
+            <span id="lessonTime"></span>
+        </p>
+
+        <p>
+            <b>Objective:</b>
+            <span id="lessonObjective"></span>
+        </p>
+
+    </div>
+
+    <h3 style="margin-top:20px;">
+        📋 Learning Path
+    </h3>
+
+    <div id="lessonStructure"></div>
+
+    <button
+        type="button"
+        onclick="startTeaching()">
+        🤖 Start AI Teaching
+    </button>
+
+</section>
+
+
+<!-- =====================================================
+TEACHING PAGE
+===================================================== -->
+
+<section
+    id="teachingPage"
+    class="card hidden">
+
+    <h2>🤖 AI Teacher</h2>
+
+    <div class="progress-box">
+
+        <p>
+            Learning Progress:
+            <b id="progressText">0%</b>
+        </p>
+
+        <div class="progress-bar">
+
+            <div
+                id="progressFill"
+                class="progress-fill">
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="avatar">
+        👨‍🏫
+    </div>
+
+    <div class="info">
+
+        <h3 id="teachingTitle"></h3>
+
+        <p
+            id="teachingText"
+            class="highlight">
+        </p>
+
+    </div>
+
+    <div class="teacher-stage">
+
+        <div
+            id="voiceAvatar"
+            class="avatar">
+            👨‍🏫
+        </div>
+
+        <div class="scene-box">
+
+            <div class="scene-label">
+                🎥 AI Teaching Presentation
+            </div>
+
+            <div
+                id="sceneText"
+                class="highlight">
+                Your lesson will be presented here.
+            </div>
+
+        </div>
+
+        <div class="voice-controls">
+
+            <button
+                type="button"
+                onclick="playAITeacherVoice()">
+                🔊 Play AI Voice
+            </button>
+
+            <button
+                type="button"
+                onclick="pauseAITeacherVoice()">
+                ⏸️ Pause
+            </button>
+
+            <button
+                type="button"
+                onclick="stopAITeacherVoice()">
+                ⏹️ Stop
+            </button>
+
+        </div>
+
+        <div
+            id="voiceStatus"
+            class="voice-status">
+            🔈 Voice ready
+        </div>
+
+        <div class="voice-controls" style="margin-top:12px;">
+            <button type="button" onclick="previousTeacherStep()">⬅️ Previous</button>
+            <button type="button" onclick="nextTeacherStep()">➡️ Next Lesson Step</button>
+        </div>
+
+        <div id="teacherStepIndicator" class="voice-status">📚 Step 1 of 1</div>
+
+    </div>
+
+
+    <!-- AI CHAT -->
+
+    <div class="ai-box">
+
+        <h3>💬 Ask AI Teacher</h3>
+
+        <p>
+            Ask anything related to your uploaded PDF.
+        </p>
+
+        <textarea
+            id="studentQuestion"
+            placeholder="Example: Explain this concept in simple words...">
+        </textarea>
+
+        <button
+            type="button"
+            id="askButton"
+            onclick="askAITeacher()">
+            🤖 Ask AI Teacher
+        </button>
+
+        <div id="aiAnswer"></div>
+
+    </div>
+
+
+    <button
+        type="button"
+        onclick="startQuestion()">
+        ❓ Check My Understanding
+    </button>
+
+</section>
+
+
+<!-- =====================================================
+QUESTION PAGE
+===================================================== -->
+
+<section
+    id="questionPage"
+    class="card hidden">
+
+    <h2>❓ Student Interaction</h2>
+
+    <h3 id="questionText"></h3>
+
+    <div id="options"></div>
+
+    <div id="questionResult"></div>
+
+    <button
+        type="button"
+        id="continueButton"
+        class="hidden"
+        onclick="continueLearning()">
+
+        ➡️ Continue Learning
+
+    </button>
+
+</section>
+
+
+<!-- =====================================================
+PRACTICE PAGE
+===================================================== -->
+
+<section
+    id="practicePage"
+    class="card hidden">
+
+    <h2>
+        📝 Practice Activity
+    </h2>
+
+    <div id="adaptiveMessage"></div>
+
+    <p style="margin-top:20px;">
+        Choose your preferred practice method:
+    </p>
+
+    <button
+        type="button"
+        class="option"
+        onclick="practiceAnswer('Interactive Practice')">
+
+        🧩 Interactive Practice
+
+    </button>
+
+    <button
+        type="button"
+        class="option"
+        onclick="practiceAnswer('Notebook Practice')">
+
+        📓 Notebook Practice
+
+    </button>
+
+    <div id="practiceResult"></div>
+
+    <div class="ai-box">
+
+        <h3>🤖 AI Practice Generator</h3>
+
+        <p>
+            Generate an additional question from your PDF.
+        </p>
+
+        <button
+            type="button"
+            onclick="generatePracticeQuestion()">
+
+            🧠 Generate AI Practice
+
+        </button>
+
+        <div id="practiceAIResult"></div>
+
+    </div>
+
+    <button
+        type="button"
+        id="assessmentButton"
+        style="display:none;"
+        onclick="startAssessment()">
+
+        📝 Start Assessment
+
+    </button>
+
+</section>
+
+
+<!-- =====================================================
+ASSESSMENT PAGE
+===================================================== -->
+
+<section
+    id="assessmentPage"
+    class="card hidden">
+
+    <h2>📝 Adaptive Assessment</h2>
+
+    <div class="progress-box">
+
+        <p>
+            Question:
+            <b id="assessmentNumber"></b>
+        </p>
+
+        <div class="progress-bar">
+
+            <div
+                id="assessmentProgress"
+                class="progress-fill">
+            </div>
+
+        </div>
+
+    </div>
+
+    <h3 id="assessmentQuestion"></h3>
+
+    <div id="assessmentOptions"></div>
+
+    <div id="assessmentResult"></div>
+
+    <button
+        type="button"
+        id="nextAssessment"
+        class="hidden"
+        onclick="nextAssessmentQuestion()">
+
+        ➡️ Next Question
+
+    </button>
+
+</section>
+
+
+<!-- =====================================================
+RESULT PAGE
+===================================================== -->
+
+<section
+    id="resultPage"
+    class="card hidden">
+
+    <h2>📊 Learning Feedback Report</h2>
+
+    <div class="score">
+
+        <span id="finalScore"></span>
+
+    </div>
+
+    <div class="report-item">
+
+        💪 <b>Strong Area:</b>
+
+        <span id="strongArea"></span>
+
+    </div>
+
+    <div class="report-item">
+
+        📌 <b>Needs Improvement:</b>
+
+        <span id="weakArea"></span>
+
+    </div>
+
+    <div class="report-item">
+
+        📚 <b>Revision Suggestion:</b>
+
+        <span id="revision"></span>
+
+    </div>
+
+    <div class="report-item">
+
+        🚀 <b>Next Step:</b>
+
+        <span id="nextStep"></span>
+
+    </div>
+
+    <div class="report-item">
+
+        🎓 <b>Recommended Learning Mode:</b>
+
+        <span id="learningMode"></span>
+
+    </div>
+
+    <div class="ai-box">
+        <h3>📈 Learning Progress Dashboard</h3>
+        <div id="progressDashboard"></div>
+    </div>
+
+    <div
+        id="finalAIReport"
+        class="ai-box">
+    </div>
+
+    <button
+        type="button"
+        onclick="startNewLesson()">
+
+        🔄 Start New Lesson
+
+    </button>
+
+</section>
+
+</div>
+
+
+<script>
+
+/* =====================================================
+GLOBAL VARIABLES
+===================================================== */
+
+let pdfText = "";
+let pdfFileName = "";
+
+let currentTopic = "";
+let currentLevel = "";
+let currentLanguage = "";
+let currentTime = "";
+let currentObjective = "";
+
+let quickAnswerCorrect = false;
+
+let assessmentIndex = 0;
+let assessmentScore = 0;
+
+let assessmentQuestions = [];
+let adaptiveLevel = 1;
+let weakConcepts = [];
+let completedTopics = [];
+let assessmentHistory = [];
+let selectedAssessment = false;
+
+let teacherSteps = [];
+let currentTeacherStep = 0;
+
+let speechUtterance = null;
+let speechChunks = [];
+let currentSpeechChunk = 0;
+
+
+/* =====================================================
+PAGE NAVIGATION
+===================================================== */
+
+function hideAllPages(){
+
+    const pages = [
+        "startPage",
+        "materialSection",
+        "lessonPage",
+        "teachingPage",
+        "questionPage",
+        "practicePage",
+        "assessmentPage",
+        "resultPage"
+    ];
+
+    pages.forEach(function(page){
+
+        document
+            .getElementById(page)
+            .classList
+            .add("hidden");
+
+    });
+
+}
+
+
+function showPage(pageId){
+
+    hideAllPages();
+
+    document
+        .getElementById(pageId)
+        .classList
+        .remove("hidden");
+
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
+
+}
+
+
+/* =====================================================
+PDF UPLOAD
+===================================================== */
+
+async function uploadMaterial(){
+
+    const fileInput =
+        document.getElementById("material");
+
+    const message =
+        document.getElementById("uploadMessage");
+
+    if(!fileInput.files.length){
+
+        message.innerHTML =
+            '<div class="error">❌ Please select a PDF first.</div>';
+
+        return;
+    }
+
+    const file =
+        fileInput.files[0];
+
+    if(file.type !== "application/pdf"){
+
+        message.innerHTML =
+            '<div class="error">❌ Please select a PDF file.</div>';
+
+        return;
+    }
+
+    message.innerHTML =
+        '<div class="info">⏳ Reading PDF...</div>';
+
+    const formData =
+        new FormData();
+
+    formData.append(
+        "material",
+        file
+    );
+
+    try{
+
+        const response =
+            await fetch(
+                "/upload",
+                {
+                    method:"POST",
+                    body:formData
+                }
+            );
+
+        const data =
+            await response.json();
+
+        if(!response.ok || !data.success){
+
+            throw new Error(
+                data.error ||
+                "Could not read the PDF"
+            );
+        }
+
+        pdfText =
+            data.text || "";
+
+        pdfFileName =
+            data.fileName ||
+            file.name;
+
+        message.innerHTML =
+            '<div class="success">✅ PDF read successfully!</div>';
+
+        document
+            .getElementById("materialInfo")
+            .innerHTML =
+            `
+            <span class="badge">
+                📄 ${escapeHTML(pdfFileName)}
+            </span>
+
+            <span class="badge">
+                📝 ${pdfText.length} characters
+            </span>
+
+            <span class="badge">
+                🧠 AI Ready
+            </span>
+            `;
+
+        document
+            .getElementById("pdfText")
+            .textContent =
+            pdfText
+                ? pdfText.substring(0,7000)
+                : "No readable text found.";
+
+        document
+            .getElementById("materialSection")
+            .classList
+            .remove("hidden");
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        message.innerHTML =
+            `
+            <div class="error">
+                ❌ ${escapeHTML(error.message)}
+            </div>
+            `;
+
+    }
+
+}
+
+
+/* =====================================================
+START LEARNING
+===================================================== */
+
+function startLearning(){
+
+    currentTopic =
+        document
+            .getElementById("topic")
+            .value
+            .trim();
+
+    currentLevel =
+        document
+            .getElementById("level")
+            .value;
+
+    currentLanguage =
+        document
+            .getElementById("language")
+            .value;
+
+    currentTime =
+        document
+            .getElementById("time")
+            .value;
+
+    currentObjective =
+        document
+            .getElementById("objective")
+            .value
+            .trim();
+
+    if(!currentTopic){
+
+        if(pdfFileName){
+
+            currentTopic =
+                pdfFileName
+                    .replace(".pdf","")
+                    .replace(/[_-]/g," ");
+
+        }
+        else{
+
+            alert("Please enter a topic.");
+
+            return;
+
+        }
+
+    }
+
+    updateLessonDetails();
+
+    generateLessonStructure();
+
+    showPage("lessonPage");
+
+}
+
+
+/* =====================================================
+GO TO LESSON
+===================================================== */
+
+function goToLesson(){
+
+    const topicInput =
+        document
+            .getElementById("topic")
+            .value
+            .trim();
+
+    if(topicInput){
+
+        currentTopic =
+            topicInput;
+
+    }
+    else if(pdfFileName){
+
+        currentTopic =
+            pdfFileName
+                .replace(".pdf","")
+                .replace(/[_-]/g," ");
+
+    }
+    else{
+
+        currentTopic =
+            "Uploaded Study Material";
+
+    }
+
+    currentLevel =
+        document
+            .getElementById("level")
+            .value;
+
+    currentLanguage =
+        document
+            .getElementById("language")
+            .value;
+
+    currentTime =
+        document
+            .getElementById("time")
+            .value;
+
+    currentObjective =
+        document
+            .getElementById("objective")
+            .value
+            .trim();
+
+    updateLessonDetails();
+
+    generateLessonStructure();
+
+    showPage("lessonPage");
+
+}
+
+
+/* =====================================================
+LESSON DETAILS
+===================================================== */
+
+function updateLessonDetails(){
+
+    document
+        .getElementById("lessonTopic")
+        .textContent =
+        currentTopic;
+
+    document
+        .getElementById("lessonLevel")
+        .textContent =
+        currentLevel;
+
+    document
+        .getElementById("lessonLanguage")
+        .textContent =
+        currentLanguage;
+
+    document
+        .getElementById("lessonTime")
+        .textContent =
+        currentTime;
+
+    document
+        .getElementById("lessonObjective")
+        .textContent =
+        currentObjective ||
+        "Understand the uploaded study material";
+
+}
+
+
+/* =====================================================
+PERSONALIZED LESSON
+===================================================== */
+
+function generateLessonStructure(){
+
+    let levelDescription;
+
+    if(currentLevel === "Beginner"){
+
+        levelDescription =
+            "Simple explanations and basic examples";
+
+    }
+    else if(currentLevel === "Intermediate"){
+
+        levelDescription =
+            "Concepts, examples and applications";
+
+    }
+    else{
+
+        levelDescription =
+            "Advanced concepts and problem solving";
+
+    }
+
+    let timeDescription;
+
+    if(currentTime === "10 minutes"){
+
+        timeDescription =
+            "Focus on important concepts";
+
+    }
+    else if(currentTime === "20 minutes"){
+
+        timeDescription =
+            "Concepts + examples + practice";
+
+    }
+    else{
+
+        timeDescription =
+            "Detailed lesson + examples + practice + assessment";
+
+    }
+
+    document
+        .getElementById("lessonStructure")
+        .innerHTML =
+        `
+        <div class="lesson-step">
+            1️⃣ Introduction
+            <br>
+            <small>
+                Introduction to ${escapeHTML(currentTopic)}
+            </small>
+        </div>
+
+        <div class="lesson-step">
+            2️⃣ Concept Explanation
+            <br>
+            <small>
+                ${levelDescription}
+            </small>
+        </div>
+
+        <div class="lesson-step">
+            3️⃣ PDF-Based Learning
+            <br>
+            <small>
+                Learn from uploaded study material
+            </small>
+        </div>
+
+        <div class="lesson-step">
+            4️⃣ Student Interaction
+            <br>
+            <small>
+                AI Teacher checks understanding
+            </small>
+        </div>
+
+        <div class="lesson-step">
+            5️⃣ Adaptive Practice
+            <br>
+            <small>
+                Difficulty changes according to performance
+            </small>
+        </div>
+
+        <div class="lesson-step">
+            6️⃣ Assessment
+            <br>
+            <small>
+                ${timeDescription}
+            </small>
+        </div>
+
+        <div class="lesson-step">
+            7️⃣ Learning Feedback
+            <br>
+            <small>
+                Personalized score and next step
+            </small>
+        </div>
+        `;
+
+}
+
+
+/* =====================================================
+AI TEACHING
+===================================================== */
+
+async function startTeaching(){
+
+    if(!pdfText || !pdfText.trim()){
+        alert("Please upload and read a PDF first.");
+        return;
+    }
+
+    showPage("teachingPage");
+    setProgress(30);
+
+    document.getElementById("teachingTitle").textContent =
+        `👨‍🏫 AI Teacher — ${currentTopic}`;
+
+    document.getElementById("teachingText").textContent =
+        "AI Teacher is preparing a step-by-step lesson from your uploaded material...";
+
+    document.getElementById("sceneText").textContent =
+        "🎬 Get ready! Your personalized lesson is starting.";
+
+    const sentences = getPDFSentences();
+    const usable = sentences.slice(0, 12);
+    const topic = currentTopic || "this topic";
+
+    teacherSteps = [
+        {
+            title: "👋 Welcome & Learning Goal",
+            text: `Hello! Today we are learning ${topic}. I will explain the important ideas step by step, give an example, and then check your understanding. Your level is ${currentLevel}, and we have ${currentTime}.`,
+            scene: "🎬 Introduction"
+        },
+        {
+            title: "📖 Step 1 — Understand the Topic",
+            text: usable[0]
+                ? `Let's start with the first important idea from your uploaded material. ${usable[0]}`
+                : `Let's begin by understanding the main idea of ${topic} from your uploaded material.`,
+            scene: "📚 Concept explanation from uploaded material"
+        },
+        {
+            title: "🧠 Step 2 — Build the Concept",
+            text: usable[1]
+                ? `Now let's connect that idea with another point from the material. ${usable[1]}`
+                : "Now let's connect the main idea with its important points and remember the key terms.",
+            scene: "🧠 Connecting concepts"
+        },
+        {
+            title: "💡 Step 3 — Important Point",
+            text: usable[2]
+                ? `Here is another important point you should remember. ${usable[2]}`
+                : "Focus on the definition, purpose, and important points of the concept.",
+            scene: "💡 Key takeaway"
+        },
+        {
+            title: "🔎 Step 4 — Example / Application",
+            text: usable[3]
+                ? `Let's see how the material describes the concept in context. ${usable[3]}`
+                : `Think about one simple real-world situation where ${topic} could be useful.`,
+            scene: "🔎 Example and application"
+        },
+        {
+            title: "❓ Step 5 — Check Your Understanding",
+            text: usable[4]
+                ? `Before we continue, think about this question: What is the main idea in this part of the material? Use this point to form your answer: ${usable[4]}`
+                : `Quick check: Can you explain the main idea of ${topic} in your own words?`,
+            scene: "❓ Student interaction"
+        },
+        {
+            title: "🎯 Step 6 — Teacher Summary",
+            text: usable.slice(0,3).length
+                ? `Great. Remember the key ideas we covered. ${usable.slice(0,3).join(". ")}`
+                : `We covered the main idea of ${topic}. Next, you will practice and complete an assessment.`,
+            scene: "🎯 Lesson summary"
+        },
+        {
+            title: "🚀 Step 7 — Practice & Adapt",
+            text: "Now you will answer practice questions. If your answer is incorrect, the AI Teacher will identify the weak concept, re-explain it, and adjust the next question difficulty.",
+            scene: "🚀 Adaptive practice"
+        }
+    ];
+
+    currentTeacherStep = 0;
+    renderTeacherStep();
+    setProgress(45);
+
+    // Start the first teaching explanation automatically for a teacher-like demo.
+    setTimeout(function(){
+        playAITeacherVoice();
+    }, 500);
+}
+
+function renderTeacherStep(){
+
+    if(!teacherSteps.length) return;
+
+    const step = teacherSteps[currentTeacherStep];
+
+    document.getElementById("teachingTitle").textContent =
+        `${step.title}`;
+
+    document.getElementById("teachingText").textContent =
+        step.text;
+
+    document.getElementById("sceneText").textContent =
+        `${step.scene}\n\n${step.text}`;
+
+    document.getElementById("teacherStepIndicator").textContent =
+        `📚 Lesson Step ${currentTeacherStep + 1} of ${teacherSteps.length}`;
+
+    speechSynthesis.cancel();
+    speechChunks = [];
+    currentSpeechChunk = 0;
+
+    const progress = 45 + Math.round((currentTeacherStep / Math.max(1, teacherSteps.length - 1)) * 30);
+    setProgress(Math.min(75, progress));
+
+    // Highlight the current step visually.
+    document.querySelectorAll(".lesson-step").forEach(function(el, index){
+        el.style.opacity = index === currentTeacherStep ? "1" : "0.65";
+    });
+}
+
+function nextTeacherStep(){
+    if(!teacherSteps.length) return;
+    if(currentTeacherStep < teacherSteps.length - 1){
+        currentTeacherStep++;
+        renderTeacherStep();
+        setTimeout(function(){ playAITeacherVoice(); }, 250);
+    } else {
+        document.getElementById("voiceStatus").textContent =
+            "✅ Teaching complete — continue to Student Interaction";
+        setProgress(75);
+    }
+}
+
+function previousTeacherStep(){
+    if(!teacherSteps.length) return;
+    if(currentTeacherStep > 0){
+        currentTeacherStep--;
+        renderTeacherStep();
+        setTimeout(function(){ playAITeacherVoice(); }, 250);
+    }
+}
+
+
+/* =====================================================
+OPENAI API CONNECTION
+===================================================== */
+
+async function callAI(prompt){
+
+    const response =
+        await fetch(
+            "/ask-ai",
+            {
+                method:"POST",
+
+                headers:{
+                    "Content-Type":
+                        "application/json"
+                },
+
+                body:JSON.stringify({
+
+                    question:prompt,
+
+                    context:pdfText,
+
+                    level:currentLevel,
+
+                    language:currentLanguage
+
+                })
+
+            }
+        );
+
+    const data =
+        await response.json();
+
+    if(!response.ok || !data.success){
+
+        throw new Error(
+            data.error ||
+            "AI Teacher error"
+        );
+
+    }
+
+    return data.answer;
+
+}
+
+
+/* =====================================================
+ASK AI TEACHER
+===================================================== */
+
+async function askAITeacher(){
+
+    const input =
+        document
+            .getElementById("studentQuestion");
+
+    const question =
+        input
+            .value
+            .trim();
+
+    const answerBox =
+        document
+            .getElementById("aiAnswer");
+
+    const button =
+        document
+            .getElementById("askButton");
+
+    if(!question){
+
+        answerBox.innerHTML =
+            `
+            <div class="warning">
+                ✏️ Please type your question.
+            </div>
+            `;
+
+        return;
+
+    }
+
+    if(!pdfText){
+
+        answerBox.innerHTML =
+            `
+            <div class="error">
+                ❌ Please upload a PDF first.
+            </div>
+            `;
+
+        return;
+
+    }
+
+    button.disabled = true;
+
+    button.textContent =
+        "🤖 AI Teacher Thinking...";
+
+    answerBox.innerHTML =
+        `
+        <div class="loading">
+            🧠 AI Teacher is thinking...
+        </div>
+        `;
+
+    try{
+
+        const result =
+            await callAI(
+                `
+The student is interacting with the AI Teacher.
+
+Student question:
+${question}
+
+Answer according to the uploaded educational material.
+
+Student level:
+${currentLevel}
+
+Teaching language:
+${currentLanguage}
+
+Explain clearly and adapt the explanation to the student's level.
+
+If the material does not contain the answer, clearly say that the answer is not available in the uploaded material.
+
+Also identify whether the question shows a possible misconception.
+
+End with ONE short question to check understanding.
+`
+            );
+
+        answerBox.innerHTML =
+            `
+            <div class="success">
+
+                🤖 <b>AI Teacher</b>
+
+                <div class="ai-answer">
+                    ${escapeHTML(result)}
+                </div>
+
+            </div>
+            `;
+
+    }
+    catch(error){
+
+        answerBox.innerHTML =
+            `
+            <div class="error">
+                ❌ ${escapeHTML(error.message)}
+            </div>
+            `;
+
+    }
+    finally{
+
+        button.disabled = false;
+
+        button.textContent =
+            "🤖 Ask AI Teacher";
+
+    }
+
+}
+
+
+/* =====================================================
+VOICE
+===================================================== */
+
+function getVoiceLanguage(){
+
+    if(currentLanguage === "Tamil"){
+
+        return "ta-IN";
+
+    }
+
+    return "en-IN";
+
+}
+
+
+function prepareSpeechChunks(){
+
+    const text =
+        document
+            .getElementById("teachingText")
+            .textContent
+            .trim();
+
+    if(!text){
+
+        return [];
+
+    }
+
+    speechChunks =
+        text
+            .match(/[^.!?।]+[.!?।]*/g)
+            ?.map(function(part){
+
+                return part.trim();
+
+            })
+            .filter(function(part){
+
+                return part.length > 0;
+
+            })
+            ||
+            [text];
+
+    return speechChunks;
+
+}
+
+
+function playAITeacherVoice(){
+
+    if(!("speechSynthesis" in window)){
+
+        alert(
+            "Your browser does not support voice."
+        );
+
+        return;
+
+    }
+
+    if(!speechChunks.length){
+
+        prepareSpeechChunks();
+
+    }
+
+    if(!speechChunks.length){
+
+        return;
+
+    }
+
+    window
+        .speechSynthesis
+        .cancel();
+
+    currentSpeechChunk = 0;
+
+    speakCurrentChunk();
+
+}
+
+
+function speakCurrentChunk(){
+
+    if(
+        currentSpeechChunk >=
+        speechChunks.length
+    ){
+
+        document
+            .getElementById("voiceStatus")
+            .textContent =
+            "✅ AI Teacher finished speaking";
+
+        document
+            .getElementById("voiceAvatar")
+            .classList
+            .remove("speaking");
+
+        return;
+
+    }
+
+    const utterance =
+        new SpeechSynthesisUtterance(
+            speechChunks[
+                currentSpeechChunk
+            ]
+        );
+
+    utterance.lang =
+        getVoiceLanguage();
+
+    utterance.rate =
+        currentLevel === "Beginner"
+            ? 0.9
+            : 1.0;
+
+    utterance.pitch =
+        1.05;
+
+    utterance.onstart =
+        function(){
+
+            document
+                .getElementById("voiceStatus")
+                .textContent =
+                `🗣️ AI Teacher speaking... ${
+                    currentSpeechChunk + 1
+                }/${speechChunks.length}`;
+
+            document
+                .getElementById("voiceAvatar")
+                .classList
+                .add("speaking");
+
+        };
+
+    utterance.onend =
+        function(){
+
+            currentSpeechChunk++;
+
+            if(
+                currentSpeechChunk <
+                speechChunks.length
+            ){
+
+                setTimeout(
+                    speakCurrentChunk,
+                    120
+                );
+
+            }
+            else{
+
+                document
+                    .getElementById("voiceStatus")
+                    .textContent =
+                    "✅ AI Teacher finished speaking";
+
+                document
+                    .getElementById("voiceAvatar")
+                    .classList
+                    .remove("speaking");
+
+            }
+
+        };
+
+    utterance.onerror =
+        function(){
+
+            document
+                .getElementById("voiceStatus")
+                .textContent =
+                "⚠️ Voice could not be played";
+
+            document
+                .getElementById("voiceAvatar")
+                .classList
+                .remove("speaking");
+
+        };
+
+    speechUtterance =
+        utterance;
+
+    window
+        .speechSynthesis
+        .speak(utterance);
+
+}
+
+
+function pauseAITeacherVoice(){
+
+    if("speechSynthesis" in window){
+
+        window
+            .speechSynthesis
+            .pause();
+
+        document
+            .getElementById("voiceStatus")
+            .textContent =
+            "⏸️ AI Teacher voice paused";
+
+    }
+
+}
+
+
+function stopAITeacherVoice(){
+
+    if("speechSynthesis" in window){
+
+        window
+            .speechSynthesis
+            .cancel();
+
+    }
+
+    currentSpeechChunk = 0;
+
+    speechUtterance = null;
+
+    const status =
+        document
+            .getElementById("voiceStatus");
+
+    const avatar =
+        document
+            .getElementById("voiceAvatar");
+
+    if(status){
+
+        status.textContent =
+            "⏹️ Voice stopped";
+
+    }
+
+    if(avatar){
+
+        avatar
+            .classList
+            .remove("speaking");
+
+    }
+
+}
+
+
+/* =====================================================
+PDF SENTENCES
+===================================================== */
+
+function getPDFSentences(){
+
+    return pdfText
+
+        .replace(/\s+/g," ")
+
+        .split(/[.!?]+/)
+
+        .map(function(sentence){
+
+            return sentence.trim();
+
+        })
+
+        .filter(function(sentence){
+
+            return sentence.length >= 30;
+
+        });
+
+}
+
+
+/* =====================================================
+STUDENT INTERACTION
+===================================================== */
+
+function startQuestion(){
+
+    if(!pdfText){
+
+        alert(
+            "Please upload a PDF first."
+        );
+
+        return;
+
+    }
+
+    const sentences =
+        getPDFSentences();
+
+    let correctText =
+        sentences.length
+            ? sentences[0]
+            : `The uploaded material is related to ${currentTopic}.`;
+
+    let wrongText1 =
+        sentences.length > 1
+            ? sentences[1]
+            : "Unrelated information";
+
+    let wrongText2 =
+        sentences.length > 2
+            ? sentences[2]
+            : "Random information";
+
+    document
+        .getElementById("questionText")
+        .textContent =
+        "📚 According to your uploaded PDF, which statement belongs to the study material?";
+
+    document
+        .getElementById("options")
+        .innerHTML =
+        `
+        <button
+            type="button"
+            class="option"
+            onclick="checkPDFAnswer(0)">
+
+            A. ${escapeHTML(
+                correctText.substring(0,220)
+            )}
+
+        </button>
+
+        <button
+            type="button"
+            class="option"
+            onclick="checkPDFAnswer(1)">
+
+            B. ${escapeHTML(
+                wrongText1.substring(0,220)
+            )}
+
+        </button>
+
+        <button
+            type="button"
+            class="option"
+            onclick="checkPDFAnswer(2)">
+
+            C. ${escapeHTML(
+                wrongText2.substring(0,220)
+            )}
+
+        </button>
+        `;
+
+    document
+        .getElementById("questionResult")
+        .innerHTML = "";
+
+    document
+        .getElementById("continueButton")
+        .classList
+        .add("hidden");
+
+    showPage("questionPage");
+
+    setProgress(40);
+
+}
+
+
+/* =====================================================
+CHECK PDF ANSWER
+===================================================== */
+
+function checkPDFAnswer(selected){
+
+    if(selected === 0){
+
+        quickAnswerCorrect = true;
+
+        document
+            .getElementById("questionResult")
+            .innerHTML =
+            `
+            <div class="success">
+
+                ✅ Correct!
+
+                <br><br>
+
+                🎉 Your answer matches the
+                uploaded study material.
+
+            </div>
+            `;
+
+    }
+    else{
+
+        quickAnswerCorrect = false;
+
+        document
+            .getElementById("questionResult")
+            .innerHTML =
+            `
+            <div class="error">
+
+                ❌ Not correct.
+
+                <br><br>
+
+                💡 <b>Adaptive Feedback:</b>
+
+                <br>
+
+                AI Teacher will simplify
+                ${escapeHTML(currentTopic)}
+                and provide additional support.
+
+            </div>
+            `;
+
+    }
+
+    document
+        .getElementById("continueButton")
+        .classList
+        .remove("hidden");
+
+}
+
+
+/* =====================================================
+CONTINUE TO PRACTICE
+===================================================== */
+
+function continueLearning(){
+
+    showPage("practicePage");
+
+    setProgress(55);
+
+    if(quickAnswerCorrect){
+
+        document
+            .getElementById("adaptiveMessage")
+            .innerHTML =
+            `
+            <div class="success">
+
+                🎉 Excellent!
+
+                <br><br>
+
+                You understood the PDF content.
+
+                <br>
+
+                Let's move to practice.
+
+            </div>
+            `;
+
+    }
+    else{
+
+        document
+            .getElementById("adaptiveMessage")
+            .innerHTML =
+            `
+            <div class="info">
+
+                🔄 <b>Adaptive Learning</b>
+
+                <br><br>
+
+                Your answer shows that you
+                need more support.
+
+                <br><br>
+
+                🤖 AI Teacher will simplify
+                ${escapeHTML(currentTopic)}
+                and give you additional practice.
+
+            </div>
+            `;
+
+    }
+
+    document
+        .getElementById("practiceResult")
+        .innerHTML = "";
+
+    document
+        .getElementById("assessmentButton")
+        .style
+        .display = "none";
+
+}
+
+
+/* =====================================================
+PRACTICE
+===================================================== */
+
+function practiceAnswer(method){
+
+    document
+        .getElementById("practiceResult")
+        .innerHTML =
+        `
+        <div class="success">
+
+            ✅ Practice mode selected:
+            <b>${escapeHTML(method)}</b>
+
+            <br><br>
+
+            🎯 Practice completed!
+
+            <br>
+
+            You can now start your assessment.
+
+        </div>
+        `;
+
+    const button =
+        document
+            .getElementById("assessmentButton");
+
+    button.style.display =
+        "block";
+
+    setProgress(65);
+
+}
+
+
+/* =====================================================
+AI PRACTICE GENERATOR
+===================================================== */
+
+async function generatePracticeQuestion(){
+
+    const resultBox =
+        document
+            .getElementById("practiceAIResult");
+
+    resultBox.innerHTML =
+        `
+        <div class="loading">
+            🧠 Generating practice question...
+        </div>
+        `;
+
+    try{
+
+        const result =
+            await callAI(
+                `
+Create ONE practice question for the student.
+
+Topic:
+${currentTopic}
+
+Level:
+${currentLevel}
+
+Language:
+${currentLanguage}
+
+Use only the uploaded PDF.
+
+Uploaded PDF:
+${pdfText.substring(0,12000)}
+
+Give:
+- One question
+- Four options
+- Correct answer
+- Short explanation
+
+Keep it suitable for the student's level.
+`
+            );
+
+        resultBox.innerHTML =
+            `
+            <div class="success">
+
+                🧩 <b>AI Practice Question</b>
+
+                <div class="ai-answer">
+                    ${escapeHTML(result)}
+                </div>
+
+            </div>
+            `;
+
+    }
+    catch(error){
+
+        resultBox.innerHTML =
+            `
+            <div class="error">
+                ❌ ${escapeHTML(error.message)}
+            </div>
+            `;
+
+    }
+
+}
+
+
+/* =====================================================
+ADAPTIVE ASSESSMENT + PROGRESS TRACKING
+===================================================== */
+
+function getAdaptiveDifficulty(){
+    if(adaptiveLevel <= 1) return "Easy";
+    if(adaptiveLevel === 2) return "Medium";
+    return "Hard";
+}
+
+function getConceptsFromPDF(){
+    return getPDFSentences().slice(0, 8).map(function(s){
+        return {
+            name: s.substring(0, 70) + (s.length > 70 ? "..." : ""),
+            text: s
+        };
+    });
+}
+
+function createAdaptiveQuestion(difficulty, conceptIndex){
+    const concepts = getConceptsFromPDF();
+    const concept = concepts[conceptIndex % Math.max(concepts.length,1)];
+    const base = concept
+        ? concept.text
+        : `The study material discusses ${currentTopic}.`;
+
+    if(difficulty === "Easy"){
+        return {
+            question: "🟢 Easy: Which statement is supported by the uploaded material?",
+            options: [
+                base.substring(0,220),
+                "This statement is unrelated to the lesson.",
+                "This information is not part of the study material."
+            ],
+            answer: 0,
+            concept: concept ? concept.name : currentTopic,
+            difficulty: difficulty
+        };
+    }
+
+    if(difficulty === "Medium"){
+        return {
+            question: "🟡 Medium: Which option best matches the concept taught in the PDF?",
+            options: [
+                base.substring(0,220),
+                "The concept has no connection with the uploaded material.",
+                "The concept should always be skipped."
+            ],
+            answer: 0,
+            concept: concept ? concept.name : currentTopic,
+            difficulty: difficulty
+        };
+    }
+
+    return {
+        question: "🔴 Hard: Which statement most closely represents the advanced understanding of this PDF concept?",
+        options: [
+            base.substring(0,220),
+            "The concept can be ignored without affecting understanding.",
+            "The concept is unrelated to the uploaded topic."
+        ],
+        answer: 0,
+        concept: concept ? concept.name : currentTopic,
+        difficulty: difficulty
+    };
+}
+
+function createAssessmentQuestions(){
+    const concepts = getConceptsFromPDF();
+    const count = Math.min(5, Math.max(3, concepts.length || 3));
+    const questions = [];
+
+    for(let i=0; i<count; i++){
+        questions.push(
+            createAdaptiveQuestion(
+                i === 0 ? getAdaptiveDifficulty() : (i < 3 ? "Easy" : "Medium"),
+                i
+            )
+        );
+    }
+    return questions;
+}
+
+function startAssessment(){
+    assessmentQuestions = createAssessmentQuestions();
+    assessmentIndex = 0;
+    assessmentScore = 0;
+    adaptiveLevel = 1;
+    weakConcepts = [];
+    assessmentHistory = [];
+    selectedAssessment = false;
+
+    document.getElementById("assessmentButton").style.display = "none";
+    showPage("assessmentPage");
+    loadAssessmentQuestion();
+    setProgress(75);
+}
+
+function loadAssessmentQuestion(){
+    const question = assessmentQuestions[assessmentIndex];
+
+    if(!question){
+        showFinalScore();
+        return;
+    }
+
+    selectedAssessment = false;
+
+    document.getElementById("assessmentNumber").textContent =
+        `${assessmentIndex + 1} / ${assessmentQuestions.length} • ${question.difficulty}`;
+
+    document.getElementById("assessmentQuestion").textContent =
+        question.question;
+
+    const container = document.getElementById("assessmentOptions");
+    container.innerHTML = "";
+
+    question.options.forEach(function(option,index){
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "option";
+        button.textContent = option;
+
+        button.onclick = function(){
+            if(selectedAssessment) return;
+            selectedAssessment = true;
+            checkAssessment(index);
+        };
+
+        container.appendChild(button);
+    });
+
+    document.getElementById("assessmentResult").innerHTML = "";
+    document.getElementById("nextAssessment").classList.add("hidden");
+
+    const progress =
+        (assessmentIndex / assessmentQuestions.length) * 100;
+
+    document.getElementById("assessmentProgress").style.width =
+        progress + "%";
+}
+
+function checkAssessment(selected){
+    const question = assessmentQuestions[assessmentIndex];
+    const correct = selected === question.answer;
+
+    assessmentHistory.push({
+        question: question.question,
+        concept: question.concept,
+        difficulty: question.difficulty,
+        correct: correct
+    });
+
+    if(correct){
+        assessmentScore++;
+
+        // Correct answer -> increase difficulty.
+        if(adaptiveLevel < 3) adaptiveLevel++;
+
+        document.getElementById("assessmentResult").innerHTML = `
+            <div class="success">
+                ✅ Correct answer!
+                <br><br>
+                🎯 <b>Adaptive Teacher:</b>
+                Your understanding is good, so the next question will be more challenging.
+                <br>
+                📚 Concept: ${escapeHTML(question.concept)}
+            </div>
+        `;
+    }else{
+        // Wrong answer -> record weak concept and reduce difficulty.
+        weakConcepts.push(question.concept);
+        if(adaptiveLevel > 1) adaptiveLevel--;
+
+        document.getElementById("assessmentResult").innerHTML = `
+            <div class="error">
+                ❌ Not correct.
+                <br><br>
+                🧠 <b>Weak concept detected:</b>
+                ${escapeHTML(question.concept)}
+                <br><br>
+                🔄 <b>Adaptive Teacher:</b>
+                I will simplify this concept and give you an easier question.
+            </div>
+            <div class="info" style="margin-top:12px;">
+                ${escapeHTML(getReExplanation(question.concept))}
+            </div>
+        `;
+    }
+
+    document.getElementById("nextAssessment").classList.remove("hidden");
+}
+
+function getReExplanation(concept){
+    if(currentLanguage === "Tamil"){
+        return `🔄 மீண்டும் விளக்கம்: ${concept}. இந்த concept-ஐ PDF-ல் இருந்து மீண்டும் படித்து முக்கியமான points-ஐ கவனிக்கவும்.`;
+    }
+    if(currentLanguage === "Tanglish"){
+        return `🔄 Re-explanation: ${concept}. Indha concept-a PDF-la irundhu marubadiyum padichu mukkiya points-a focus pannunga.`;
+    }
+    return `🔄 Re-explanation: ${concept}. Review this concept from the uploaded PDF and focus on the important points.`;
+}
+
+function nextAssessmentQuestion(){
+    assessmentIndex++;
+
+    if(assessmentIndex < assessmentQuestions.length){
+        const conceptIndex =
+            assessmentIndex % Math.max(getConceptsFromPDF().length,1);
+
+        // Generate the next question from the current adaptive difficulty.
+        assessmentQuestions[assessmentIndex] =
+            createAdaptiveQuestion(getAdaptiveDifficulty(), conceptIndex);
+
+        loadAssessmentQuestion();
+    }else{
+        showFinalScore();
+    }
+}
+
+function showFinalScore(){
+    showPage("resultPage");
+    setProgress(100);
+
+    const total = assessmentQuestions.length || 1;
+    const percentage =
+        Math.round((assessmentScore / total) * 100);
+
+    const uniqueWeak = [...new Set(weakConcepts.filter(Boolean))];
+    const strongCount =
+        assessmentHistory.filter(function(item){ return item.correct; }).length;
+
+    document.getElementById("finalScore").textContent =
+        `Score: ${assessmentScore} / ${total} (${percentage}%)`;
+
+    if(percentage >= 80){
+        document.getElementById("strongArea").textContent =
+            "Excellent understanding";
+        document.getElementById("weakArea").textContent =
+            uniqueWeak.length
+                ? uniqueWeak.join(" • ")
+                : "No major weakness identified";
+        document.getElementById("revision").textContent =
+            "Review important PDF points once";
+        document.getElementById("nextStep").textContent =
+            "Move to advanced learning";
+        document.getElementById("learningMode").textContent =
+            "Advanced adaptive learning recommended";
+    }else if(percentage >= 50){
+        document.getElementById("strongArea").textContent =
+            `${strongCount} concept area(s) understood`;
+        document.getElementById("weakArea").textContent =
+            uniqueWeak.length
+                ? uniqueWeak.join(" • ")
+                : "Some concepts need more practice";
+        document.getElementById("revision").textContent =
+            "Revise the detected weak concepts and practise again";
+        document.getElementById("nextStep").textContent =
+            "Continue with reinforcement practice";
+        document.getElementById("learningMode").textContent =
+            "Medium-level adaptive practice recommended";
+    }else{
+        document.getElementById("strongArea").textContent =
+            "Student participation";
+        document.getElementById("weakArea").textContent =
+            uniqueWeak.length
+                ? uniqueWeak.join(" • ")
+                : "Concept understanding needs improvement";
+        document.getElementById("revision").textContent =
+            "Repeat weak concepts with simpler explanations";
+        document.getElementById("nextStep").textContent =
+            "Continue with beginner-level revision";
+        document.getElementById("learningMode").textContent =
+            "Easy adaptive learning recommended";
+    }
+
+    completedTopics.push(currentTopic);
+    renderProgressDashboard(percentage, uniqueWeak);
+    generateFinalAIReport(percentage);
+}
+
+function renderProgressDashboard(percentage, uniqueWeak){
+    const box = document.getElementById("progressDashboard");
+    if(!box) return;
+
+    const completed =
+        [...new Set(completedTopics)].length;
+
+    box.innerHTML = `
+        <div class="report-item">
+            📚 <b>Completed Topic:</b> ${escapeHTML(currentTopic)}
+        </div>
+        <div class="report-item">
+            📊 <b>Quiz Score:</b>
+            ${assessmentScore}/${assessmentQuestions.length} (${percentage}%)
+        </div>
+        <div class="report-item">
+            🧠 <b>Weak Areas:</b>
+            ${uniqueWeak.length
+                ? escapeHTML(uniqueWeak.join(" • "))
+                : "None detected"}
+        </div>
+        <div class="report-item">
+            🔄 <b>Revision Recommendation:</b>
+            ${uniqueWeak.length
+                ? "Revise weak concepts before moving ahead."
+                : "Quick revision is enough."}
+        </div>
+        <div class="report-item">
+            🚀 <b>Next Learning Topic:</b>
+            ${escapeHTML(getNextLearningTopic())}
+        </div>
+        <div class="report-item">
+            🏁 <b>Topics Completed This Session:</b> ${completed}
+        </div>
+    `;
+}
+
+function getNextLearningTopic(){
+    const concepts = getConceptsFromPDF();
+
+    if(weakConcepts.length){
+        return "Revision: " + [...new Set(weakConcepts)][0];
+    }
+
+    if(concepts.length > 1){
+        return concepts[
+            Math.min(assessmentIndex + 1, concepts.length - 1)
+        ].name;
+    }
+
+    return currentTopic + " – Advanced Practice";
+}
+
+/* =====================================================
+AI FINAL REPORT
+===================================================== */
+
+async function generateFinalAIReport(percentage){
+
+    const box =
+        document
+            .getElementById("finalAIReport");
+
+    box.innerHTML =
+        `
+        <div class="loading">
+            🤖 AI Teacher is preparing personalized feedback...
+        </div>
+        `;
+
+    try{
+
+        const result =
+            await callAI(
+                `
+Create a short personalized learning feedback report.
+
+Topic:
+${currentTopic}
+
+Student Level:
+${currentLevel}
+
+Assessment Score:
+${assessmentScore}/${assessmentQuestions.length}
+
+Percentage:
+${percentage}%
+
+Use the uploaded PDF as the knowledge source.
+
+Give:
+1. What the student understood
+2. What needs improvement
+3. What to revise
+4. What the student should learn next
+
+Answer in:
+${currentLanguage}
+
+Keep it simple and encouraging.
+`
+            );
+
+        box.innerHTML =
+            `
+            <h3>🤖 AI Teacher Personalized Feedback</h3>
+
+            <div class="ai-answer">
+                ${escapeHTML(result)}
+            </div>
+            `;
+
+    }
+    catch(error){
+
+        box.innerHTML =
+            `
+            <div class="warning">
+
+                ⚠️ AI feedback unavailable.
+
+                Your score and learning report
+                are still available above.
+
+            </div>
+            `;
+
+    }
+
+}
+
+
+/* =====================================================
+PROGRESS
+===================================================== */
+
+function setProgress(value){
+
+    document
+        .getElementById("progressFill")
+        .style
+        .width =
+        value + "%";
+
+    document
+        .getElementById("progressText")
+        .textContent =
+        value + "%";
+
+}
+
+
+/* =====================================================
+ESCAPE HTML
+===================================================== */
+
+function escapeHTML(value){
+
+    return String(value)
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+
+}
+
+
+/* =====================================================
+START NEW LESSON
+===================================================== */
+
+function startNewLesson(){
+
+    stopAITeacherVoice();
+
+    pdfText = "";
+    pdfFileName = "";
+
+    currentTopic = "";
+    currentLevel = "";
+    currentLanguage = "";
+    currentTime = "";
+    currentObjective = "";
+
+    quickAnswerCorrect = false;
+
+    assessmentIndex = 0;
+    assessmentScore = 0;
+
+    assessmentQuestions = [];
+    adaptiveLevel = 1;
+    weakConcepts = [];
+    completedTopics = [];
+    assessmentHistory = [];
+    selectedAssessment = false;
+    teacherSteps = [];
+    currentTeacherStep = 0;
+
+    const dashboard = document.getElementById("progressDashboard");
+    if(dashboard) dashboard.innerHTML = "";
+
+    speechChunks = [];
+    currentSpeechChunk = 0;
+
+    document
+        .getElementById("topic")
+        .value = "";
+
+    document
+        .getElementById("objective")
+        .value = "";
+
+    document
+        .getElementById("material")
+        .value = "";
+
+    document
+        .getElementById("uploadMessage")
+        .innerHTML = "";
+
+    document
+        .getElementById("pdfText")
+        .textContent = "";
+
+    document
+        .getElementById("materialInfo")
+        .innerHTML = "";
+
+    document
+        .getElementById("aiAnswer")
+        .innerHTML = "";
+
+    document
+        .getElementById("studentQuestion")
+        .value = "";
+
+    document
+        .getElementById("assessmentButton")
+        .style
+        .display = "none";
+
+    setProgress(0);
+
+    showPage("startPage");
+
+}
+
+
+/* =====================================================
+INITIAL PAGE
+===================================================== */
+
+showPage("startPage");
+
+</script>
+
+
+<script>
+/* ===== AI TEACHER VIDEO LESSON ENGINE ===== */
+let aiVideoScenes = [];
+let aiVideoIndex = 0;
+let aiVideoTimer = null;
+let aiVideoRunning = false;
+
+function buildAIVideoScenes(){
+  const title = (document.getElementById("teachingTitle")?.innerText || "Personalized AI Lesson").trim();
+  const text = (document.getElementById("teachingText")?.innerText || document.getElementById("teachingContent")?.innerText || "").trim();
+  const material = (typeof pdfText !== "undefined" ? pdfText : "").trim();
+
+  const source = text || material || "Today we will learn this topic step by step.";
+  const chunks = source.split(/(?<=[.!?])\s+/).filter(Boolean).slice(0,8);
+
+  aiVideoScenes = [
+    {title:"🎬 Introduction", text:"Welcome! I am your AI Teacher. Let's learn this topic step by step.", visual:"👨‍🏫 Teacher introduction • 🎯 Personalized lesson"},
+    {title:"📖 Concept Explanation", text:chunks[0] || "First, let's understand the main concept.", visual:"💡 Main concept • 🧠 Simple explanation"},
+    {title:"🔎 Deep Understanding", text:chunks[1] || "Now let's look at the important points and how they connect.", visual:"🔗 Key points • 📝 Important notes"},
+    {title:"💡 Example / Demonstration", text:chunks[2] || "Here is a simple example to make the idea easier to understand.", visual:"💡 Example • 🧩 Step-by-step demonstration"},
+    {title:"❓ Understanding Check", text:"Pause here. Think about what you learned. Next, I will ask you a question.", visual:"❓ Question time • ✋ Check your understanding"},
+    {title:"🧠 Adaptive Practice", text:"Your answer will help me decide whether to make the next explanation easier or more challenging.", visual:"📊 Evaluate • 🔄 Adapt difficulty"},
+    {title:"📝 Assessment", text:"Finally, you will complete a short assessment and receive personalized feedback.", visual:"✅ Assessment • 📈 Learning progress"},
+    {title:"🎯 Next Step", text:"Great work! Your results will be used to recommend revision or the next learning topic.", visual:"📚 Revision • 🚀 Next topic"}
+  ];
+}
+
+function renderAIVideoScene(){
+  if(!aiVideoScenes.length) buildAIVideoScenes();
+  const s = aiVideoScenes[aiVideoIndex];
+  const total = aiVideoScenes.length;
+  const pct = ((aiVideoIndex+1)/total)*100;
+
+  const title=document.getElementById("aiSceneTitle");
+  const text=document.getElementById("aiSceneText");
+  const visual=document.getElementById("aiVisualBox");
+  const step=document.getElementById("aiVideoStep");
+  const fill=document.getElementById("aiVideoProgressFill");
+  const avatar=document.getElementById("aiTeacherAvatar");
+  const cap=document.getElementById("aiVideoCaption");
+
+  if(title) title.textContent=s.title;
+  if(text) text.textContent=s.text;
+  if(visual) visual.textContent=s.visual;
+  if(step) step.textContent="Scene "+(aiVideoIndex+1)+" / "+total;
+  if(fill) fill.style.width=pct+"%";
+  if(cap) cap.textContent=aiVideoRunning ? "🗣️ AI Teacher is teaching..." : "AI Teacher ready";
+
+  if(avatar) avatar.classList.toggle("talking",aiVideoRunning);
+}
+
+function speakAIVideoScene(){
+  if(!("speechSynthesis" in window)) return;
+  speechSynthesis.cancel();
+  const s=aiVideoScenes[aiVideoIndex];
+  const lang=(typeof selectedLanguage!=="undefined" && selectedLanguage==="Tamil")?"ta-IN":"en-IN";
+  const u=new SpeechSynthesisUtterance(s.text);
+  u.lang=lang;
+  u.rate=0.9;
+  u.pitch=1;
+  u.onend=()=>{
+    if(aiVideoRunning) {
+      aiVideoTimer=setTimeout(()=>nextAIVideoScene(),700);
+    }
+  };
+  speechSynthesis.speak(u);
+}
+
+function startAIVideoLesson(){
+  buildAIVideoScenes();
+  aiVideoRunning=true;
+  renderAIVideoScene();
+  speakAIVideoScene();
+}
+
+function pauseAIVideoLesson(){
+  aiVideoRunning=false;
+  if(aiVideoTimer) clearTimeout(aiVideoTimer);
+  if("speechSynthesis" in window) speechSynthesis.pause();
+  renderAIVideoScene();
+}
+
+function nextAIVideoScene(){
+  if(aiVideoTimer) clearTimeout(aiVideoTimer);
+  if(aiVideoIndex < aiVideoScenes.length-1) aiVideoIndex++;
+  else { aiVideoRunning=false; aiVideoIndex=0; }
+  renderAIVideoScene();
+  if(aiVideoRunning) speakAIVideoScene();
+}
+
+function stopAIVideoLesson(){
+  aiVideoRunning=false;
+  if(aiVideoTimer) clearTimeout(aiVideoTimer);
+  if("speechSynthesis" in window) speechSynthesis.cancel();
+  aiVideoIndex=0;
+  renderAIVideoScene();
+}
+
+document.addEventListener("DOMContentLoaded",()=>{
+  buildAIVideoScenes();
+  renderAIVideoScene();
+});
+</script>
+
+</body>
+</html>
