@@ -2,7 +2,7 @@
 
 An AI-powered educational web application designed to help students learn and get answers to their questions.
 
-🌐 **Live Demo:** [Try AI-Teacher](https://lnkd.in/gvqDbXCW)
+🌐 **Live Demo:** https://brindhaarikrishnan.github.io/AI-Teacher/
 
 💻 **GitHub Repository:** [AI-Teacher](https://github.com/brindhaArikrishnan/AI-Teacher)
 
